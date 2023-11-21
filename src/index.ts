@@ -8,25 +8,19 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
-	//
-	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-	// MY_QUEUE: Queue;
-}
-
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request: Request) {
+		let url = new URL(request.url);
+    	let path = url.pathname.slice(1).split("/");
+		let destinationURL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+		// If the user is being safe and responsible, then give them a cookie instead.
+		if (path.length > 0 && path[0] == "safe") {
+			destinationURL = "https://upload.wikimedia.org/wikipedia/commons/f/f1/2ChocolateChipCookies.jpg";
+		}
+		
+		// Temporary Redirect, so that the browser does not cache this response
+		const statusCode = 302;
+		return Response.redirect(destinationURL, statusCode);
 	},
 };
